@@ -1,0 +1,136 @@
+{% extends '_partials/base.html' %}
+{% load static %}
+
+{% block title %}
+<title>Watch World - Home</title>
+{% endblock %}
+
+{% block body %}
+<link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+<div class="container py-5">
+
+    <!-- Hero Section -->
+    <section class="text-center mb-5" data-aos="fade-up" data-aos-duration="1000">
+        <h1 class="display-4 fw-bold text-uppercase" style="transform: perspective(800px) rotateX(5deg);">
+            Welcome to <span class="text-warning">Watch World</span> ⌚
+        </h1>
+        <h2 class="fw-semibold mb-3 text-secondary">
+            Timeless Elegance for Every Moment ✨
+        </h2>
+        <p class="lead text-muted mx-auto" style="max-width: 800px;">
+            At Watch World, we bring you the finest selection of timepieces crafted with precision and designed to perfection.
+            Whether you're into classic leather straps, sleek stainless steel, or smartwatches — we have the perfect piece to match your vibe.
+        </p>
+    </section>
+
+    <!-- Product Highlights -->
+    <!-- <section class="row g-4 mb-5">
+        {% for watch in watches %}
+        <div class="col-lg-4 col-md-6" data-aos="zoom-in-up" data-aos-delay="{{ forloop.counter0 }}00">
+            <div class="card border-0 shadow rounded-4 watch-card" style="transform-style: preserve-3d;">
+                <img src="{{ watch.image.url }}" class="card-img-top rounded-top-4" alt="{{ watch.name }}" style="height: 250px; object-fit: cover;">
+                <div class="card-body text-center">
+                    <h5 class="card-title fw-bold">{{ watch.name }}</h5>
+                    <p class="card-text text-muted">{{ watch.description|truncatewords:15 }}</p>
+                    <p class="fw-bold mb-2">Price: ₹{{ watch.price }}</p>
+                    
+                    <div class="input-group mb-2">
+                        <span class="input-group-text">Qty</span>
+                        <input type="number" value="1" min="1" class="form-control" />
+                    </div>
+
+                    {% if user.is_authenticated %}
+                    <button class="btn btn-primary w-100 add-to-cart" data-id="{{ watch.id }}">🛒 Add to Cart</button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </section> -->
+
+    <!-- Why Choose Us Section -->
+    <section class="text-center mb-5" data-aos="fade-right">
+        <h2 class="fw-bold text-warning">✨ Why Choose Watch World?</h2>
+        <div class="row justify-content-center mt-4">
+            <div class="col-md-8">
+                <ul class="list-group list-group-flush fs-5">
+                    <li class="list-group-item">✔ Premium Quality Watches ⌚</li>
+                    <li class="list-group-item">✔ Iconic and Stylish Brands 👑</li>
+                    <li class="list-group-item">✔ Elegant Designs for Every Occasion 🎩</li>
+                    <li class="list-group-item">✔ Free Shipping and Easy Returns 📦</li>
+                    <li class="list-group-item">✔ Exclusive Membership & Discounts 🎁</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="text-center" data-aos="fade-up">
+        <h3 class="fw-semibold mb-2">Find Your Perfect Watch Today!</h3>
+        <p class="text-muted mb-4">Browse our exquisite collection and let every second shine in style.</p>
+        <a href="{% url 'watch' %}" class="btn btn-warning btn-lg rounded-pill px-5 shadow-sm">Shop Now</a>
+    </section>
+
+</div>
+
+<!-- AOS + Script Enhancements -->
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script>
+    AOS.init();
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const buttons = document.querySelectorAll('.add-to-cart');
+
+        buttons.forEach(button => {
+            button.addEventListener('click', function () {
+                const watchId = this.getAttribute('data-id');
+                const quantity = this.closest('.card-body').querySelector('input').value;
+
+                fetch('/place_order/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: JSON.stringify({
+                        cart: [{
+                            id: watchId,
+                            quantity: quantity
+                        }]
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    alert(data.message || "Added to cart!");
+                });
+            });
+        });
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    });
+</script>
+
+<style>
+    .watch-card {
+        transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+    .watch-card:hover {
+        transform: rotateY(8deg) rotateX(3deg) scale(1.03);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    }
+</style>
+{% endblock %}

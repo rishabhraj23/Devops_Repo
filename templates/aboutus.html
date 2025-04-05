@@ -1,0 +1,79 @@
+{% extends '_partials/base.html' %}
+
+{% block title %}
+<title>Watch World - About Us</title>
+{% endblock %}
+
+{% load static %}
+
+{% block body %}
+<!-- Parallax Background -->
+<section class="parallax-section d-flex align-items-center justify-content-center">
+  <div class="text-center text-white">
+    <h1 class="display-4 fw-bold animate__animated animate__fadeInDown">About <span class="text-warning">Watch World</span></h1>
+    <p class="lead animate__animated animate__fadeInUp">Where every second tells a story. ⌚</p>
+  </div>
+</section>
+
+<!-- About Us Content -->
+<div class="container my-5">
+  <div class="about-card p-5 shadow-lg rounded-4 bg-light animate__animated animate__fadeInUp" style="transform: rotateX(1deg) rotateY(1deg);">
+    <h2 class="text-warning">🕰️ Our Story</h2>
+    <p>
+      Founded in 2020, Watch World began with a vision: to bring world-class timepieces to those who value elegance and craftsmanship. What started as a small boutique has grown into a trusted brand for luxury, smart, and classic watches — sourced from the most respected names in horology.
+    </p>
+
+    <h2 class="text-warning mt-4">💡 Our Values</h2>
+    <ul class="list-group list-group-flush fs-5">
+      <li class="list-group-item">✔ <strong>Quality:</strong> Premium brands known for exceptional engineering.</li>
+      <li class="list-group-item">✔ <strong>Sustainability:</strong> Eco-conscious manufacturing & materials.</li>
+      <li class="list-group-item">✔ <strong>Trust:</strong> Transparent and reliable service.</li>
+      <li class="list-group-item">✔ <strong>Innovation:</strong> Timeless tradition with modern tech.</li>
+    </ul>
+
+    <h2 class="text-warning mt-4">🤝 Our Promise</h2>
+    <p>
+      Whether you're buying your first watch or adding to your collection, we guarantee authentic timepieces, secure transactions, and reliable service — because luxury should always come with peace of mind.
+    </p>
+
+    <div class="text-center mt-5">
+      <a href="{% url 'watch' %}" class="btn btn-warning btn-lg px-5 shadow">Explore Collection</a>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_css %}
+<style>
+  .parallax-section {
+    background-image: url("{% static 'images/about-hero.jpg' %}");
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+    height: 60vh;
+    position: relative;
+    z-index: 1;
+    box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.5);
+  }
+
+  .about-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    perspective: 1000px;
+  }
+
+  .about-card:hover {
+    transform: rotateX(1deg) rotateY(-1deg) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  }
+
+  .list-group-item {
+    background: transparent;
+    border: none;
+  }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<link href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" rel="stylesheet">
+{% endblock %}

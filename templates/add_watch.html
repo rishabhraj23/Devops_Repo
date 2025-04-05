@@ -1,0 +1,45 @@
+{% extends '_partials/base.html' %}
+
+{% block title %}
+<title>Watch World - Add New Watch</title>
+{% endblock %}
+
+{% load static %}
+
+{% block body %}
+<div class="container mt-5">
+    <h2 class="text-center text-uppercase mb-4 fw-bold">🕰️ Add New Watch</h2>
+
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card p-4 shadow border-0">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Watch Name</label>
+                        <input type="text" name="name" class="form-control" placeholder="Enter watch name" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Price (₹)</label>
+                        <input type="number" name="cost" step="0.01" class="form-control" placeholder="Enter price" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Description</label>
+                        <textarea name="description" class="form-control" rows="4" placeholder="Enter watch description" required></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Upload Image</label>
+                        <input type="file" name="image" class="form-control" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-warning w-100 fw-bold">Add Watch</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

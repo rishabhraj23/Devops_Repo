@@ -1,0 +1,124 @@
+{% extends '_partials/base.html' %}
+
+{% block title %}
+<title>Watch World - Orders</title>
+{% endblock %}
+
+{% load static %}
+
+{% block body %}
+<style>
+    .order-card {
+        background: #fff;
+        border: none;
+        border-radius: 1rem;
+        padding: 1.5rem;
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease-in-out;
+    }
+
+    .order-card:hover {
+        transform: translateY(-8px) scale(1.01);
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
+    }
+
+    .order-badge {
+        padding: 4px 12px;
+        font-size: 0.85rem;
+        border-radius: 50px;
+        font-weight: 600;
+    }
+
+    .badge-pending {
+        background-color: #ffc107;
+        color: #000;
+    }
+
+    .badge-completed {
+        background-color: #28a745;
+        color: #fff;
+    }
+
+    .badge-canceled {
+        background-color: #dc3545;
+        color: #fff;
+    }
+
+    .order-items li {
+        font-size: 0.95rem;
+        color: #444;
+    }
+
+    .order-actions .btn {
+        font-size: 0.85rem;
+        border-radius: 50px;
+    }
+
+    .price-total {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #212529;
+    }
+</style>
+
+<div class="container my-5">
+
+    <!-- Flash messages -->
+    {% if messages %}
+    <div class="alert-container mb-4">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <h2 class="text-center mb-5 fw-bold">📦 My Watch Orders</h2>
+
+    {% if orders %}
+    <div class="row g-4">
+        {% for order in orders %}
+        <div class="col-md-6 col-lg-4">
+            <div class="order-card">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0">Order #{{ order.id }}</h5>
+                    <span class="order-badge 
+                        {% if order.status == 'pending' %} badge-pending 
+                        {% elif order.status == 'completed' %} badge-completed 
+                        {% else %} badge-canceled {% endif %}">
+                        {{ order.status|title }}
+                    </span>
+                </div>
+                <p class="text-muted mb-2">
+                    <i class="bi bi-calendar-event"></i>
+                    {{ order.created_at|date:"M d, Y H:i" }}
+                </p>
+
+                <p class="fw-bold mb-1">Items:</p>
+                <ul class="order-items list-unstyled">
+                    {% for item in order.items.all %}
+                    <li>• {{ item.quantity }} × {{ item.watch.name }} – €{{ item.subtotal }}</li>
+                    {% endfor %}
+                </ul>
+
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <span class="price-total">€ {{ order.total_price }}</span>
+                    <div class="order-actions d-flex gap-2">
+                        {% if user.is_superuser %}
+                        <a href="{% url 'complete_order' order.id %}" class="btn btn-outline-success btn-sm">Complete</a>
+                        {% endif %}
+                        <a href="{% url 'cancel_order' order.id %}" class="btn btn-outline-danger btn-sm">Cancel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-center text-muted fs-5 mt-5">You have no orders yet. Start shopping your dream watch today! ⌚</p>
+    {% endif %}
+
+</div>
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends '_partials/base.html' %}
+
+{% block title %}
+<title>Watch World - User Profile</title>
+{% endblock %}
+
+{% load static %}
+{% load widget_tweaks %}
+
+{% block body %}
+<div class="container my-5">
+    <h1 class="text-center mb-4 fw-bold">👤 Update Your Profile</h1>
+    <hr class="mb-4">
+
+    <section class="vh-100">
+        <div class="mask d-flex align-items-center h-100">
+            <div class="container h-100">
+                <div class="row d-flex justify-content-center align-items-center h-100">
+                    <div class="col-12 col-md-9 col-lg-7 col-xl-6">
+                        <div class="card shadow-lg" style="border-radius: 15px;">
+                            <div class="card-body p-5">
+                                <form method="POST">
+                                    {% csrf_token %}
+
+                                    <h4 class="mb-3 text-warning fw-semibold">Account Info</h4>
+                                    {% for field in u_form.visible_fields %}
+                                        <div class="form-outline mb-4">
+                                            <label class="form-label fw-semibold">{{ field.label_tag }}</label>
+                                            {% render_field field class="form-control" %}
+                                            {% if field.errors %}
+                                            <div class="text-danger small">{{ field.errors }}</div>
+                                            {% endif %}
+                                        </div>
+                                    {% endfor %}
+
+                                    {% if c_form %}
+                                    <h4 class="mb-3 text-warning fw-semibold">Additional Details</h4>
+                                    {% for field in c_form.visible_fields %}
+                                        <div class="form-outline mb-4">
+                                            <label class="form-label fw-semibold">{{ field.label_tag }}</label>
+                                            {% render_field field class="form-control" %}
+                                            {% if field.errors %}
+                                            <div class="text-danger small">{{ field.errors }}</div>
+                                            {% endif %}
+                                        </div>
+                                    {% endfor %}
+                                    {% endif %}
+
+                                    {% if form.errors %}
+                                    <div class="alert alert-danger mt-3">
+                                        {{ form.errors }}
+                                    </div>
+                                    {% endif %}
+
+                                    <div class="d-flex justify-content-center">
+                                        <button type="submit" class="btn btn-warning btn-lg px-5 fw-bold">Save Changes</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

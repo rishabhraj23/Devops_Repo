@@ -1,0 +1,133 @@
+{% extends '_partials/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title %}
+<title>Watch World - Sign Up</title>
+{% endblock %}
+
+{% block body %}
+<style>
+    body {
+        background: linear-gradient(to bottom right, #101820, #1e3c72);
+        overflow-x: hidden;
+    }
+
+    #particles-js {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        z-index: -1;
+    }
+
+    .signup-card {
+        transform-style: preserve-3d;
+        transition: transform 0.6s ease;
+        transform: perspective(1000px) rotateY(2deg) rotateX(1deg);
+    }
+
+    .signup-card:hover {
+        transform: perspective(1000px) rotateY(0deg) rotateX(0deg) scale(1.02);
+        box-shadow: 0 15px 30px rgba(255, 255, 255, 0.1);
+    }
+
+    .form-control:focus {
+        box-shadow: 0 0 8px rgba(255, 193, 7, 0.6);
+    }
+
+    .toggle-password {
+        cursor: pointer;
+    }
+</style>
+
+<!-- 🌌 Particle Background -->
+<div id="particles-js"></div>
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card shadow-lg border-0 signup-card animate__animated animate__fadeInUp" style="border-radius: 20px;">
+                <div class="card-header bg-warning text-dark fw-bold text-center fs-4">📝 Join Watch World</div>
+                <div class="card-body px-5">
+                    <form id="signupForm" method="POST" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        {% for field in u_form.visible_fields %}
+                        <div class="form-outline mb-4 position-relative">
+                            <label class="form-label fw-semibold">{{ field.label }}</label>
+                            {% if field.name == "password1" or field.name == "password2" %}
+                                <div class="input-group">
+                                    {% render_field field class="form-control password-field" %}
+                                    <button class="btn btn-outline-secondary toggle-password" type="button">👁</button>
+                                </div>
+                            {% else %}
+                                {% render_field field class="form-control" %}
+                            {% endif %}
+                            {% if field.errors %}
+                                <div class="text-danger small mt-1">{{ field.errors }}</div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-warning fw-bold btn-lg" id="submitBtn">Create Account</button>
+                        </div>
+
+                        <p class="text-center mt-3 small">
+                            Already registered?
+                            <a href="{% url 'login' %}" class="text-decoration-none text-warning fw-semibold">Login here</a>
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 🧠 Animate CSS, SweetAlert & Particles.js -->
+<link href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
+
+<!-- 💡 Init particles -->
+<script>
+    particlesJS.load('particles-js', 'https://cdn.jsdelivr.net/gh/VincentGarreau/particles.js/particles.json', function () {
+        console.log("Particles.js loaded.");
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // 🔐 Password toggle
+        document.querySelectorAll('.toggle-password').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const input = this.previousElementSibling;
+                input.type = input.type === 'password' ? 'text' : 'password';
+                this.innerText = input.type === 'password' ? '👁' : '🙈';
+            });
+        });
+
+        // 🎉 Animated submit
+        const form = document.getElementById("signupForm");
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const btn = document.getElementById("submitBtn");
+            btn.innerHTML = "Creating Account...";
+            btn.disabled = true;
+
+            setTimeout(() => {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Welcome to Watch World!',
+                    text: 'Your account was created successfully 🎉',
+                    confirmButtonColor: '#ffc107',
+                    backdrop: true,
+                }).then(() => {
+                    form.submit();
+                });
+            }, 1000);
+        });
+    });
+</script>
+{% endblock %}

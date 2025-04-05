@@ -1,0 +1,148 @@
+{% extends '_partials/base.html' %}
+{% block title %}<title>Watch World - Shop</title>{% endblock %}
+{% load static %}
+
+{% block body %}
+<style>
+    .watch-card {
+        background: linear-gradient(145deg, #ffffff, #f0f0f0);
+        border-radius: 20px;
+        padding: 1.5rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        border: none;
+        transform-style: preserve-3d;
+        perspective: 1000px;
+    }
+
+    .watch-card:hover {
+        transform: translateY(-10px) scale(1.03);
+        box-shadow: 0 30px 50px rgba(0, 0, 0, 0.2);
+    }
+
+    .watch-img {
+        border-radius: 15px;
+        transition: transform 0.3s ease;
+        object-fit: cover;
+        height: 200px;
+        width: 100%;
+    }
+
+    .watch-card:hover .watch-img {
+        transform: scale(1.05);
+    }
+
+    .btn-add {
+        border-radius: 30px;
+        transition: all 0.2s ease-in-out;
+    }
+
+    .btn-add:hover {
+        transform: scale(1.02);
+        box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
+    }
+
+    .card-title {
+        font-weight: 700;
+    }
+
+    .card-text {
+        font-size: 0.95rem;
+    }
+
+    .price-tag {
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: #333;
+    }
+</style>
+
+<div class="container">
+    <div class="text-end mb-3">
+        {% if user.is_superuser %}
+        <a href="{% url 'add_watch' %}" class="btn btn-warning rounded-pill shadow-sm">➕ Add Watch</a>
+        {% endif %}
+    </div>
+
+    <h2 class="text-center fw-bold text-dark mb-5">⌚ Our Watch Collection</h2>
+
+    <div class="row">
+        {% for watch in watches %}
+        <div class="col-lg-4 col-md-6 mb-4 d-flex align-items-stretch">
+            <div class="watch-card w-100 text-center">
+                {% if user.is_superuser %}
+                <div class="text-end mb-2">
+                    <a href="{% url 'watch_form_add_update' watch.id %}" class="btn btn-sm btn-success rounded-pill">Edit</a>
+                    <a href="{% url 'delete_watch' watch.id %}" class="btn btn-sm btn-danger rounded-pill">Delete</a>
+                </div>
+                {% endif %}
+
+                <img src="{{ watch.image.url }}" alt="{{ watch.name }}" class="watch-img" />
+
+
+                <h5 class="card-title">{{ watch.name }}</h5>
+                <p class="card-text text-muted">{{ watch.description|truncatewords:18 }}</p>
+                <p class="price-tag">Price: €{{ watch.cost }}</p>
+
+                {% if user.is_authenticated %}
+                <div class="input-group my-2">
+                    <span class="input-group-text">Qty</span>
+                    <input type="number" id="qty-{{ watch.id }}" value="1" min="1" class="form-control text-center">
+                </div>
+                <button class="btn btn-primary btn-add w-100 mt-2"
+                        onclick="addToCart({{ watch.id }}, '{{ watch.name }}', {{ watch.cost }})">
+                    🛒 Add to Cart
+                </button>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- ✅ Add-to-Cart Script -->
+<script>
+    function addToCart(watchId, watchName, cost) {
+        const quantityInput = document.getElementById(`qty-${watchId}`);
+        const quantity = quantityInput ? quantityInput.value : 1;
+
+        fetch('/place_order', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify({
+                cart: [{
+                    id: watchId,
+                    quantity: quantity
+                }]
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message || `${watchName} added to cart!`);
+        })
+        .catch(error => {
+            console.error('Error adding to cart:', error);
+            alert("Something went wrong. Please try again.");
+        });
+    }
+
+    // 🔐 CSRF Token Helper
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let cookie of cookies) {
+                cookie = cookie.trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+</script>
+{% endblock %}

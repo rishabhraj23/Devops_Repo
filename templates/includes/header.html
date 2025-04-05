@@ -1,0 +1,114 @@
+{% load static %}
+
+<style>
+  /* Container shadow and padding */
+  .navbar-custom {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    background-color: #fff;
+    border-radius: 0 0 12px 12px;
+    transition: all 0.3s ease-in-out;
+  }
+
+  /* Navbar links styling */
+  .navbar-custom .nav-link {
+    color: #222;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    font-size: 1.05rem;
+  }
+
+  .navbar-custom .nav-link:hover {
+    color: #ffc107;
+    transform: translateY(-2px);
+  }
+
+  /* Active link color */
+  .navbar-custom .link-secondary {
+    color: #ffc107 !important;
+  }
+
+  /* Buttons styling */
+  .btn-modern {
+    font-weight: 600;
+    border-radius: 8px;
+    transition: 0.2s ease-in-out;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .btn-modern:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  }
+
+  .btn-light {
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+  }
+
+  .btn-gold {
+    background-color: #ffc107;
+    color: black;
+    border: none;
+  }
+
+  .btn-gold:hover {
+    background-color: #e0a800;
+  }
+
+  /* Dropdown menu enhancements */
+  .dropdown-menu {
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  }
+
+  .dropdown-item:hover {
+    background-color: #ffc107;
+    color: #000;
+  }
+</style>
+
+<header class="p-3 mb-4 navbar-custom">
+  <div class="container">
+    <div class="d-flex flex-wrap align-items-center justify-content-between">
+      <!-- Brand -->
+      <a href="{% url 'home' %}" class="d-flex align-items-center text-decoration-none">
+        <!-- <img src="{% static 'images/logo.png' %}" width="40" height="40" alt="Watch World Logo" class="me-2"> -->
+        <span class="fs-4 fw-bold text-dark">Watch <span class="text-warning">World</span></span>
+      </a>
+
+      <!-- Navigation -->
+      <ul class="nav me-auto ms-lg-4">
+        <li><a href="{% url 'home' %}" class="nav-link px-3 link-secondary">🏠 Home</a></li>
+        <li><a href="{% url 'watch' %}" class="nav-link px-3">⌚ Watches</a></li>
+        {% if user.is_authenticated %}
+        <li><a href="{% url 'orders' %}" class="nav-link px-3">📦 Orders</a></li>
+        <li><a href="{% url 'history' %}" class="nav-link px-3">📜 History</a></li>
+        {% endif %}
+        <li><a href="{% url 'aboutus' %}" class="nav-link px-3">ℹ️ About Us</a></li>
+      </ul>
+
+      <!-- User Auth Area -->
+      {% if user.is_authenticated %}
+      <div class="dropdown text-end">
+        <a href="#" class="d-block text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+          <img src="https://github.com/mdo.png" alt="User Profile" width="36" height="36" class="rounded-circle shadow-sm">
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end text-small">
+          <li><a class="dropdown-item" href="{% url 'user_details' %}">👤 Profile</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item" href="{% url 'logout' %}">🚪 Sign out</a></li>
+        </ul>
+      </div>
+      {% else %}
+      <div class="d-flex gap-2">
+        <a href="{% url 'login' %}">
+          <button type="button" class="btn btn-modern btn-light">🔐 Login</button>
+        </a>
+        <a href="{% url 'register' %}">
+          <button type="button" class="btn btn-modern btn-gold">📝 Sign Up</button>
+        </a>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</header>

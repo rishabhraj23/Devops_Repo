@@ -1,0 +1,130 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+<style>
+    .footer-3d {
+        background: linear-gradient(to bottom, #0f0f0f, #1c1c1c);
+        color: #eee;
+        transform-style: preserve-3d;
+        box-shadow: 0 -10px 25px rgba(0, 0, 0, 0.6);
+    }
+
+    .footer-3d a.footer-link {
+        color: #ffc107;
+        transition: all 0.3s ease;
+    }
+
+    .footer-3d a.footer-link:hover {
+        color: #fff;
+        text-decoration: underline;
+    }
+
+    .footer-3d ul li {
+        padding: 6px 0;
+        list-style: none;
+        transition: transform 0.2s;
+    }
+
+    .footer-3d ul li:hover {
+        transform: translateX(5px);
+    }
+
+    .social-icons a {
+        margin-right: 12px;
+        font-size: 1.25rem;
+        color: #ffc107;
+        transition: transform 0.3s ease, color 0.3s ease;
+    }
+
+    .social-icons a:hover {
+        transform: scale(1.2);
+        color: #fff;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        .footer-3d {
+            background: #121212;
+            color: #ddd;
+        }
+
+        .footer-3d a.footer-link {
+            color: #ffd54f;
+        }
+
+        .footer-3d a.footer-link:hover {
+            color: #fff;
+        }
+
+        .footer-3d .social-icons a {
+            color: #ffd54f;
+        }
+    }
+</style>
+
+<footer class="footer-3d mt-5 py-5">
+    <div class="container">
+        <div class="row gy-4 justify-content-between">
+
+            <!-- Brand Info -->
+            <div class="col-md-4">
+                <h4 class="text-warning fw-bold mb-3">⌚ Watch World</h4>
+                <p class="small">
+                    Experience timeless elegance. Our curated collection features premium craftsmanship and world-class designs to elevate every moment.
+                </p>
+                <div class="social-icons mt-3">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-x-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+                <p class="small mt-3">© {{ year|default:2025 }} Watch World. All rights reserved.</p>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="col-md-3">
+                <h5 class="fw-semibold mb-3 text-warning">Quick Links</h5>
+                <ul class="list-unstyled small">
+                    <li><a href="{% url 'home' %}" class="footer-link">Home</a></li>
+                    <li><a href="{% url 'aboutus' %}" class="footer-link">About Us</a></li>
+                    <li><a href="{% url 'watch' %}" class="footer-link">Shop</a></li>
+                    <li><a href="{% url 'register' %}" class="footer-link">Sign Up</a></li>
+                    <li><a href="{% url 'login' %}" class="footer-link">Login</a></li>
+                </ul>
+            </div>
+
+            <!-- Newsletter -->
+            <div class="col-md-4">
+                <h5 class="fw-semibold mb-3 text-warning">Stay Updated</h5>
+                <form id="newsletterForm" class="d-flex flex-column gap-2">
+                    <input type="email" id="newsletterEmail" class="form-control" placeholder="Your email address" required>
+                    <button type="submit" class="btn btn-warning fw-bold">Subscribe</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    document.getElementById("newsletterForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+        const email = document.getElementById("newsletterEmail").value;
+
+        // Simulated submission effect
+        Swal.fire({
+            title: 'Subscribed!',
+            text: `Thanks for joining us, ${email}!`,
+            icon: 'success',
+            confirmButtonColor: '#ffc107',
+            showClass: {
+                popup: 'animate__animated animate__fadeInDown'
+            },
+            hideClass: {
+                popup: 'animate__animated animate__fadeOutUp'
+            }
+        });
+
+        document.getElementById("newsletterForm").reset();
+    });
+</script>

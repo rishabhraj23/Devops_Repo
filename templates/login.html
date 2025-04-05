@@ -1,0 +1,127 @@
+{% extends '_partials/base.html' %}
+{% load static %}
+
+{% block title %}
+<title>Watch World - Login</title>
+{% endblock %}
+
+{% block body %}
+<!-- 🪐 Particle background -->
+<div id="particles-js"></div>
+
+<style>
+    body {
+        background: linear-gradient(to bottom right, #0f2027, #203a43, #2c5364);
+        overflow-x: hidden;
+    }
+
+    #particles-js {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        z-index: -1;
+    }
+
+    .login-card {
+        transform-style: preserve-3d;
+        transition: transform 0.6s ease;
+        transform: perspective(1000px) rotateY(2deg) rotateX(1deg);
+        border-radius: 20px;
+    }
+
+    .login-card:hover {
+        transform: perspective(1000px) rotateY(0deg) rotateX(0deg) scale(1.02);
+        box-shadow: 0 15px 30px rgba(255, 255, 255, 0.1);
+    }
+
+    .form-control:focus {
+        box-shadow: 0 0 10px rgba(255, 193, 7, 0.5);
+    }
+
+    .toggle-password {
+        cursor: pointer;
+    }
+
+    .btn-login {
+        background-color: #ffc107;
+        border: none;
+        color: #000;
+    }
+
+    .btn-login:hover {
+        background-color: #e0a800;
+    }
+</style>
+
+<div class="container my-5">
+    <div class="row justify-content-center align-items-center">
+        <div class="col-md-6 animate__animated animate__fadeInUp">
+            <div class="card shadow-lg login-card p-4">
+                <div class="card-header bg-warning text-dark text-center fs-4 fw-bold rounded-top">🔐 Login to Watch World</div>
+                <div class="card-body">
+                    <form method="POST">
+                        {% csrf_token %}
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Username</label>
+                            <input type="text" class="form-control" name="email" placeholder="Enter your username" required>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Password</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" name="password" id="password" placeholder="Enter password" required>
+                                <button type="button" class="btn btn-outline-secondary toggle-password">👁</button>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="rememberme">
+                                <label class="form-check-label text-light" for="rememberme">Remember me</label>
+                            </div>
+                            <a href="#" class="text-warning text-decoration-none">Forgot password?</a>
+                        </div>
+
+                        <div class="d-grid mb-3">
+                            <button type="submit" class="btn btn-login fw-bold btn-lg" id="loginBtn">Login</button>
+                        </div>
+
+                        <p class="text-center text-light mt-2 mb-0 small">
+                            Don't have an account?
+                            <a href="{% url 'register' %}" class="text-warning fw-semibold">Register here</a>
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 🎉 Animate.css, Particles, SweetAlert -->
+<link href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!-- 💫 Particles.js config -->
+<script>
+    particlesJS.load('particles-js', 'https://cdn.jsdelivr.net/gh/VincentGarreau/particles.js/particles.json', function () {
+        console.log("✨ Particles loaded");
+    });
+</script>
+
+<!-- 👁 Password toggle -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll('.toggle-password').forEach(button => {
+            button.addEventListener('click', function () {
+                const input = this.previousElementSibling;
+                input.type = input.type === 'password' ? 'text' : 'password';
+                this.textContent = input.type === 'password' ? '👁' : '🙈';
+            });
+        });
+    });
+</script>
+{% endblock %}
